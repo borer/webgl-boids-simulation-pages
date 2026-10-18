@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#fdf0d5" />
+  <title>Royal Pattern</title>
+  <style>
+    :root {
+      --bg: #003049;
+      --shape: #001d2c;
+      --pattern-bg: #fff5f5;
+      --pattern-shape: #ffe492;
+      --toggle-bg: #fce7bd;
+      --toggle-fg: #9a6b1f;
+      --toggle-border: #e2c48f;
+    }
+
+    :root[data-theme="dark"] {
+      --pattern-bg: #001d2c;
+      --pattern-shape: #123b52;
+      --toggle-bg: #0b1322;
+      --toggle-fg: #a3b7df;
+      --toggle-border: #1f3350;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--bg);
+    }
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #royal rect {
+      fill: var(--pattern-bg);
+    }
+
+    #royal .lattice {
+      stroke: var(--pattern-shape);
+    }
+
+    #royal .dots {
+      fill: var(--pattern-shape);
+    }
+
+    #themeToggle {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 12px);
+      left: calc(env(safe-area-inset-left, 0px) + 12px);
+      z-index: 50;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--toggle-border);
+      background: var(--toggle-bg);
+      color: var(--toggle-fg);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #themeToggle svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    #themeToggle .icon-moon {
+      display: none;
+    }
+
+    :root[data-theme="dark"] #themeToggle .icon-sun {
+      display: none;
+    }
+
+    :root[data-theme="dark"] #themeToggle .icon-moon {
+      display: block;
+    }
+
+    #gl {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: transparent;
+      touch-action: none;
+    }
+
+    #error {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      z-index: 100;
+      text-align: center;
+      color: #6b573a;
+      font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    #error.show {
+      display: grid;
+    }
+
+    #error .box {
+      max-width: 520px;
+      border: 1px solid #e2c48f;
+      background: #fce7bd;
+      border-radius: 12px;
+      padding: 22px 24px;
+      line-height: 1.6;
+    }
+
+    #error h2 {
+      margin: 0 0 8px;
+      color: #9a6b1f;
+      font-size: 15px;
+    }
+
+    #error code {
+      color: #9a6b1f;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/main-CuRb5bhj.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/platform-DmYaX5eH.js">
+</head>
+
+<body>
+  <svg class="bg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <pattern id="royal" width="40" height="40" patternUnits="userSpaceOnUse">
+        <rect width="40" height="40" fill="#fff5f5" />
+        <g class="lattice" fill="none" stroke="#ffe492">
+          <path d="M20 1 L39 20 L20 39 L1 20 Z" stroke-width="1.5" />
+          <path d="M20 11 L29 20 L20 29 L11 20 Z" stroke-width="1.2" />
+        </g>
+        <g class="dots" fill="#ffe492">
+          <circle cx="20" cy="20" r="2" />
+          <circle cx="0" cy="0" r="1.6" />
+          <circle cx="40" cy="0" r="1.6" />
+          <circle cx="0" cy="40" r="1.6" />
+          <circle cx="40" cy="40" r="1.6" />
+        </g>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#royal)" />
+  </svg>
+
+  <canvas id="gl"></canvas>
+
+  <button id="themeToggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </svg>
+    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+    </svg>
+  </button>
+
+  <div id="error">
+    <div class="box">
+      <h2 id="errorTitle">WebGL2 unavailable</h2>
+      <p id="errorBody"></p>
+    </div>
+  </div>
+
+</body>
+
+</html>
